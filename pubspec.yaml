@@ -1,0 +1,44 @@
+name: flutter_application_6
+description: "A new Flutter project."
+publish_to: 'none'
+version: 0.1.0
+
+environment:
+  sdk: '>=3.2.6 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_svg: ^2.0.10+1
+  path: ^1.8.3
+  sqflite: ^2.0.0
+  sqflite_common_ffi_web: 0.4.2+3
+  
+flutter_svg: ^2.0.10+1
+    
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.1
+
+flutter:
+  assets: 
+   - assets/images/pullupimg.webp
+   - assets/images/squats.webp
+   - assets/images/setUp.jpeg
+   - assets/images/jumping.png
+   - assets/images/search.svg
+   - assets/images/profile1.svg
+   - assets/images/profile2.svg
+   - assets/images/playicon.webp
+   - assets/images/profile.svg
+   - assets/images/timer.svg
+   - assets/images/home.svg
+   - assets/images/home1.svg
+   - assets/images/info.svg
+   - assets/images/info1.svg
+   - assets/images/info2.svg
+   - assets/images/pushup.jpg
+   - assets/images/pullup.jpeg
+  uses-material-design: true
