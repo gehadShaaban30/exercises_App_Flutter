@@ -1,7 +1,9 @@
 // ignore_for_file: library_private_types_in_public_api, avoid_print, prefer_const_constructors
 
+
 import 'package:flutter/material.dart';
 import 'login.dart'; // Import your login.dart file
+import 'package:firebase_auth/firebase_auth.dart';
 
 class SignupPage extends StatefulWidget {
   const SignupPage({super.key});
@@ -16,7 +18,8 @@ class _SignupPageState extends State<SignupPage> {
   final TextEditingController passwordController = TextEditingController();
   bool _obscurePassword = true; // Initially hide the password
   bool _nameError = false; // Track if name is empty
-  bool _emailError = false; // Track if email meets constraints
+  bool _emailEmptyError = false; // Track if email is empty
+  bool _emailFormatError = false; // Track if email format is incorrect
   bool _passwordError = false; // Track if password meets constraints
 
   @override
@@ -55,7 +58,7 @@ class _SignupPageState extends State<SignupPage> {
                   filled: true,
                   fillColor: Colors.white,
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(16.0),
+                    borderRadius: BorderRadius.circular(50),
                   ),
                 ),
               ),
@@ -64,13 +67,13 @@ class _SignupPageState extends State<SignupPage> {
                 controller: emailController,
                 decoration: InputDecoration(
                   labelText: 'Email',
-                  errorText: _emailError
-                      ? (_emailError ? 'Email cannot be empty' : 'Email must end with @gmail.com')
-                      : null, // Show error indicator
+                  errorText: _emailEmptyError
+                      ? 'Email cannot be empty'
+                      : (_emailFormatError ? 'Email must end with @gmail.com' : null),
                   filled: true,
                   fillColor: Colors.white,
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(16.0),
+                    borderRadius: BorderRadius.circular(50.0),
                   ),
                 ),
               ),
@@ -83,7 +86,7 @@ class _SignupPageState extends State<SignupPage> {
                   filled: true,
                   fillColor: Colors.white,
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(16.0),
+                    borderRadius: BorderRadius.circular(50.0),
                   ),
                   suffixIcon: IconButton(
                     icon: Icon(
@@ -105,7 +108,7 @@ class _SignupPageState extends State<SignupPage> {
                   child: Text(
                     'Password must contain at least one number, one uppercase and lowercase letter, and be 8 or more characters',
                     style: TextStyle(
-                      color: Color.fromARGB(255, 167, 58, 48),
+                      color: Color.fromARGB(255, 211, 40, 24),
                       fontSize: 12.0,
                     ),
                   ),
@@ -116,7 +119,8 @@ class _SignupPageState extends State<SignupPage> {
                   // Reset all error states
                   setState(() {
                     _nameError = false;
-                    _emailError = false;
+                    _emailEmptyError = false;
+                    _emailFormatError = false;
                     _passwordError = false;
                   });
 
@@ -132,14 +136,15 @@ class _SignupPageState extends State<SignupPage> {
                     });
                   }
 
-                  // Check if email is empty or doesn't end with @gmail.com
+                  // Check if email is empty
                   if (email.isEmpty) {
                     setState(() {
-                      _emailError = true;
+                      _emailEmptyError = true;
                     });
                   } else if (!email.endsWith('@gmail.com')) {
+                    // Check if email format is incorrect
                     setState(() {
-                      _emailError = true;
+                      _emailFormatError = true;
                     });
                   }
 
@@ -153,23 +158,27 @@ class _SignupPageState extends State<SignupPage> {
                     });
                   }
 
-                  // Example: Check if the fields meet the criteria
-                  if (!_nameError && !_emailError && !_passwordError) {
-                    // Create a user map
+                  // If all conditions are met, create a user
+                  if (!_nameError && !_emailEmptyError && !_emailFormatError && !_passwordError) {
+                    try {
+                      // Create user in Firebase Authentication
+                      await FirebaseAuth.instance.createUserWithEmailAndPassword(
+                        email: email,
+                        password: password,
+                      );
 
-                    // Insert user into the database
-
-                    // For simplicity, let's print the entered data and the userId to the console
-                    print('Sign Up successful, Name: $name, Email: $email');
-                  } else {
-                    // Show an error message or handle the case when fields are empty or do not meet criteria
-                    print('Please enter all required information or check constraints.');
+                      // User created successfully
+                      print('User created successfully. Email: $email');
+                    } catch (e) {
+                      // Handle errors during user creation
+                      print('Error creating user: $e');
+                    }
                   }
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.white,
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16.0),
+                    borderRadius: BorderRadius.circular(50.0),
                   ),
                 ),
                 child: Container(

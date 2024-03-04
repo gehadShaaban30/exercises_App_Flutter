@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_6/pages/welcomePage.dart';
 import 'signup.dart'; // Import your signup page file
 import 'forgetPassword.dart'; // Import your forget password page file
-// Import the database helper
+import 'package:firebase_auth/firebase_auth.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key});
@@ -59,9 +59,9 @@ class _LoginPageState extends State<LoginPage> {
                           : 'Email should end with @gmail.com')
                       : null, // Show error indicator
                   filled: true,
-                  fillColor: Colors.white,
+                  fillColor: Color.fromARGB(213, 255, 255, 255),
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(16.0),
+                    borderRadius: BorderRadius.circular(50.0),
                   ),
                 ),
               ),
@@ -75,7 +75,7 @@ class _LoginPageState extends State<LoginPage> {
                   filled: true,
                   fillColor: Colors.white,
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(16.0),
+                    borderRadius: BorderRadius.circular(50.0),
                   ),
                   suffixIcon: IconButton(
                     icon: Icon(
@@ -149,12 +149,30 @@ class _LoginPageState extends State<LoginPage> {
 
                   // Example: Check if the email and password are correct
                   if (email.isNotEmpty && password.isNotEmpty && !(_emailError)) {
-                    // Authentication successful
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => HomePage()),
-                    );
-                    print('Login successful. Email: $email');
+                    try {
+                      // Sign in with email and password
+                      await FirebaseAuth.instance.signInWithEmailAndPassword(
+                        email: email,
+                        password: password,
+                      );
+
+                      // Authentication successful
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(builder: (context) => HomePage()),
+                      );
+                      print('Login successful. Email: $email');
+                    } on FirebaseAuthException catch (e) {
+                      // Handle specific Firebase Auth exceptions
+                      print('Error during login: $e');
+                      if (e.code == 'user-not-found' || e.code == 'wrong-password') {
+                        // Display error message for user not found or wrong password
+                        print('Email or password is not correct.');
+                      } else {
+                        // Handle other errors
+                        print('Error during login: $e');
+                      }
+                    }
                   } else {
                     // Authentication failed
                     print('Invalid email or password.');
@@ -163,7 +181,7 @@ class _LoginPageState extends State<LoginPage> {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.white,
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16.0),
+                    borderRadius: BorderRadius.circular(50.0),
                   ),
                 ),
                 child: Container(

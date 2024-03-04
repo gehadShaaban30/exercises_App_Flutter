@@ -1,6 +1,7 @@
 // ignore_for_file: non_constant_identifier_names, avoid_types_as_parameter_names, file_names, use_key_in_widget_constructors, prefer_const_constructors, use_super_parameters
 
 import 'package:flutter/material.dart';
+import 'package:flutter_application_6/pages/profile.dart';
 import 'pullUp.dart';
 import 'pushUp.dart';
 import 'SetUp.dart';
@@ -24,6 +25,12 @@ class HomePage extends StatelessWidget {
           ),
         ),
         centerTitle: true,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+            bottomLeft: Radius.circular(30),
+            bottomRight: Radius.circular(30),
+          ),
+        ),
       ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -68,12 +75,11 @@ class HomePage extends StatelessWidget {
                     MaterialPageRoute(builder: (context) => PullUpPage()),
                   );
                 },
-              ),
-              ExerciseButton(
+              ),ExerciseButton(
                 imagePath: 'assets/images/pushup.jpg',
-                exerciseName: 'Push Up',
+                exerciseName: 'push Up',
                 onPressed: () {
-                  // Navigate to Push Up page
+                  // Navigate to Sit Up page
                   Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) => PushUpPage()),
@@ -100,28 +106,43 @@ class HomePage extends StatelessWidget {
           ),
         ],
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Colors.purple,
-        selectedItemColor: Colors.white,
-        unselectedItemColor: Colors.white,
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home, color: Colors.purple),
-            label: '', // Remove the label for the "Home" icon
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person, color: Colors.purple),
-            label: 'Profile',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.search, color: Colors.purple),
-            label: 'Search',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.info, color: Colors.purple),
-            label: 'Info',
-          ),
-        ],
+      bottomNavigationBar: Container(
+        color: Colors.purple,
+        
+        padding: EdgeInsets.all(8.0),
+        
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            IconButton(
+              icon: Icon(Icons.home, color: Colors.white),
+              onPressed: () {
+                // Add functionality for the home icon
+              },
+            ),
+            IconButton(
+              icon: Icon(Icons.person, color: Colors.white),
+              onPressed: () {
+                // Add functionality for the profile icon
+                 Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => ProfilePage()),);
+              },
+            ),
+            IconButton(
+              icon: Icon(Icons.search, color: Colors.white),
+              onPressed: () {
+                // Add functionality for the search icon
+              },
+            ),
+            IconButton(
+              icon: Icon(Icons.info, color: Colors.white),
+              onPressed: () {
+                // Add functionality for the info icon
+              },
+            ),
+          ],
+        ),
       ),
     );
   }
